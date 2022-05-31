@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  gateway:
+    image: container-gateway
+    build:
+      context: .
+      dockerfile: Gateway\Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7000:80"
+    networks:
+      - minha-rede
+    depends_on:
+      - "microservice-pedidos"
+      - "microservice-produtos"
+
+  microservice-pedidos:
+    image: container-ms-pedidos
+    build:
+      context: .
+      dockerfile: Pedidos\Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7001:80"
+    networks:
+      - minha-rede
+
+  microservice-produtos:
+    image: container-ms-produtos
+    build:
+      context: .
+      dockerfile: Produtos\Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "7002:80"
+    networks:
+      - minha-rede
+
+networks:
+  minha-rede:
+    driver: bridge
